@@ -13,35 +13,26 @@
     <title>SA - Instituto Mix</title>
 </head>
 <body>
-    <!-- #region Cabeçalho -->
-    <header id="Navegador">
-        <a class="UnderlinePersonalizada">Dashboard</a>
-        <input type="text" name="Data" id="Data" placeholder="Data dos Agendamentos">
-        <a class="UnderlinePersonalizada" id="Sair">Sair</a>
-    </header>
-    <!-- #endregion -->
+    
+    <aside id="MenuLateralContainer">
+        <ul id="MenuLateral"></ul>
+    </aside>
 
-    <article id="Agendamentos">
-        <h1 style="color: #ffffff40; font-size: 1.5rem;">Nada aqui por Enquanto!</h1>
-        <!-- <section class="Dia">
-            <header>Segunda - 27/01</header>
-            <ul class="Agendamento">
-                <li>Carlos Rodriguês</li>
-                <div>
-                    <img class="Horario" src="{% static 'Horario.png'%}" alt="Horario">
-                    <li>Horario</li>
-                </div>
-            </ul>
-        </section> -->
-    </article>
+     <header>
+        <img src="{% static 'Menu.png'%}" alt="Menu Lateral" id="MenuLateralBtn">
+     </header>
 
-    <ul id="Footer">
-        <li><a class="Options UnderlinePersonalizada green">Adicionar Agendamento</a></li>
-        <li><a class="Options UnderlinePersonalizada blue">Editar Agendamento</a></li>
-        <li><a class="Options UnderlinePersonalizada red">Excluir Agendamento</a></li>
-    </ul>
+    <main>
+        <article id="Agendamentos">
+            <h1 style="color: #ffffff40; font-size: 1.5rem;">Nada aqui por Enquanto!</h1>
+        </article>
+        <article id="Adicionar">
+
+        </article>
+    </main>
+
     <footer>
-        Heric Silveira - 2025 - hericsilveira2010@outlook.com.br
+        <h1>Heric Silveira - 2025 - hericsilveira2010@outlook.com.br</h1>
     </footer>
 
     <script src="{% static 'scripts/Agendamentos.js' %}"></script>

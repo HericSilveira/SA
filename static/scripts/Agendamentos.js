@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const Token = document.getElementById("TOKEN").getAttribute("content");
-    Logout();
-    DataInputAgendamentos(Token);
+    ShowMenu();
+    // Logout();
+    // DataInputAgendamentos(Token);
 });
 
 function ConverterParaISO(Data) {
@@ -10,9 +11,9 @@ function ConverterParaISO(Data) {
 
 async function GetOrientadores() {
     try {
-        const Response = await fetch('GetOrientadores/')
-        const Data = await Response.json()
-        return Data
+        const Response = await fetch('GetOrientadores/');
+        const Data = await Response.json();
+        return Data;
     } catch (error) {
         console.log(error);
         return null;
@@ -49,7 +50,7 @@ async function GetAgendamentos(Token, Inicio, Final) {
         }
 
         Agendamentos.innerHTML = ''
-        console.log()
+
         for (Data in MesmaData){
             let Dia = document.createElement('section');
             Dia.classList.add('Dia');
@@ -61,21 +62,19 @@ async function GetAgendamentos(Token, Inicio, Final) {
             Agendamentos.appendChild(Dia);
             
             for (let index in MesmaData[Data]){
-                let ID = MesmaData[Data][index]['Orientador']
-                let Cor = Orientadores[ID]['Cor']
+                let Cliente = MesmaData[Data][index]
+                let Cor = Orientadores[Cliente['Orientador']]['Cor']
                 let Agendamento = document.createElement('ul');
-                Agendamento.setAttribute('Data-id', ID) 
+                Agendamento.setAttribute('Data-ClienteID', Cliente['ID']) 
+                Agendamento.setAttribute('Data-OrientadorID', Cliente['Orientador']) 
                 Agendamento.style.borderTop = `15px solid #${Cor}`
                 Agendamento.classList.add('Agendamento');
-                let Cliente = MesmaData[Data][index]
                 let Horario = Cliente['Data'].split('T')[1].slice(0, 5)
                 Agendamento.innerHTML += `<li>${Cliente['Nome']}</li>`
                 Agendamento.innerHTML += `<div> <img src='../static/Horario.png' class='Horario'></img> <li>${Horario}</li> </div>`
                 Dia.appendChild(Agendamento)
             }
         }
-
-
 
     } catch (error) {
         console.log(error)
@@ -100,6 +99,25 @@ function DataInputAgendamentos(Token) {
     })
 }
 
+
+function ShowMenu() {
+    const MenuContainer = document.getElementById('MenuLateralContainer')
+    const Menu = document.getElementById('MenuLateral')
+    const ShowMenuBtn = document.getElementById('MenuLateralBtn')
+    ShowMenuBtn.style.display = 'inline-block'
+
+    ShowMenuBtn.addEventListener('click', () => {
+
+        MenuContainer.classList.toggle('Visible')
+        if (ShowMenuBtn.style.display == '' || ShowMenuBtn.style.display == 'none'){
+            ShowMenuBtn.style.display = 'inline-block'
+        }
+        else{
+            ShowMenuBtn.style.display = 'none'
+        }
+
+    })
+}
 
 function Logout() {
     let Sair = document.getElementById('Sair')

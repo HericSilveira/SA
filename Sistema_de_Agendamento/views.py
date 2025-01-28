@@ -52,5 +52,6 @@ def Login(request: WSGIRequest):
                 
 def Agendamentos(request: WSGIRequest):
     if "ID" in request.session:
-        return render(request, 'Agendamentos.html')
+        Usuario = Orientadores.objects.get(ID=request.session['ID']).Nome
+        return render(request, 'Agendamentos.html', {'Usuario': Usuario})
     return redirect('Login')
