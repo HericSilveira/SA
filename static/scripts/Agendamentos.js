@@ -70,10 +70,7 @@ async function GetAgendamentos(Token, Inicio, Final) {
                 let Cliente = MesmaData[Data][index]
                 let Horario = Cliente['Data'].split('T')[1].slice(0, 5)
                 Agendamento.innerHTML += `<li>${Cliente['Nome']}</li>`
-                Agendamento.innerHTML += `<div> 
-                <img src='../static/Horario.png' class='Horario'></img> 
-                <li>${Horario}</li> 
-                </div>`
+                Agendamento.innerHTML += `<div> <img src='../static/Horario.png' class='Horario'></img> <li>${Horario}</li> </div>`
                 Dia.appendChild(Agendamento)
             }
         }

@@ -20,6 +20,6 @@ class Clientes(models.Model):
     Curso = models.CharField(max_length = 255)
     Celular = models.CharField(max_length=11)
     Data = models.DateTimeField()
-    Presenca = models.CharField(max_length = 1, default = '0', choices=(('0', 'Ausente'), ('1', 'Presente')))
-    Status = models.CharField(max_length = 1, default = '2', choices=(('0', 'Recusou'), ('1', 'Comprou'), ('2', 'Negociando')))
+    Presenca = models.CharField(max_length = 1, default = '0', choices=(('0', 'Ausente'), ('1', 'Presente'), ('2', '')))
+    Status = models.CharField(max_length = 1, default = '2', choices=(('0', 'Recusou'), ('1', 'Comprou'), ('2', 'Negociando'), ('3', '')))
     Observacoes = models.CharField(max_length = 255)
