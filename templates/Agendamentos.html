@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/Agendamentos.css' %}">
+    <meta name="csrf-token" id="TOKEN" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+    <title>SA - Instituto Mix</title>
+</head>
+<body>
+    <!-- #region Cabeçalho -->
+    <header id="Navegador">
+        <a class="UnderlinePersonalizada">Dashboard</a>
+        <input type="text" name="Data" id="Data" placeholder="Data dos Agendamentos">
+        <a class="UnderlinePersonalizada" id="Sair">Sair</a>
+    </header>
+    <!-- #endregion -->
+
+    <article id="Agendamentos">
+        <h1 style="color: #ffffff40; font-size: 1.5rem;">Nada aqui por Enquanto!</h1>
+        <!-- <section class="Dia">
+            <header>Segunda - 27/01</header>
+            <ul class="Agendamento">
+                <li>Carlos Rodriguês</li>
+                <div>
+                    <img class="Horario" src="{% static 'Horario.png'%}" alt="Horario">
+                    <li>Horario</li>
+                </div>
+            </ul>
+        </section> -->
+    </article>
+
+    <script src="{% static 'scripts/Agendamentos.js' %}"></script>
+</body>
+</html>

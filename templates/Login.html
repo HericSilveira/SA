@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/Login.css' %}">
+    <meta name="csrf-token" id="TOKEN" content="{{ csrf_token }}">
+    <title>SA - Instituto Mix</title>
+</head>
+<body>
+
+    <main id="Login">
+        <header><img src="{% static 'Perfil.png' %}" alt=""></header>
+        <input type="text" name="Usuario" id="Usuario" class="Login" placeholder="Usuario">
+        <input type="password" name="Senha" id="Senha" class="Login" placeholder="Senha">
+        <a class="UnderlinePersonalizada" id="Submit">Entrar</a>
+    </main>
+
+    <script src="{% static 'scripts/Login.js' %}"></script>
+</body>
+</html>

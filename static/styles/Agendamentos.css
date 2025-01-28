@@ -1,0 +1,195 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: clamp(8px, 1.2dvw, 18px);
+    font-weight: 500;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #ffffff;
+    text-decoration: none;
+    list-style-type: none;
+}
+
+html{
+    background-color: #202020;
+}
+
+body{
+    background: #202020;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    height: 100dvh;
+}
+/* Header Section */
+#Navegador{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 10%;
+    background-color: #202020;
+    padding: 0% 2.5%;
+    border-bottom: 2px solid #ffffff10;
+}
+
+#Navegador > ul{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 350px;
+    max-width: 50%;
+    height: 100%;
+    padding: 0% 2.5%;
+}
+
+#Navegador a{
+    cursor: pointer;
+}
+
+#Data{
+    text-align: center;
+    font-size: 1.25rem;
+    color: #ffffff;
+    width: 40%;
+    min-width: 160px;
+    padding: 2.5px 5px;
+    background-color: #3f3f3f;
+    border: none;
+    border-bottom: 2px solid #ffffff20;
+}
+
+
+/* Agendamentos Section */
+
+#Agendamentos{
+    position: relative;
+    width: 100%;
+    height: 80%;
+    gap: 20px;
+    padding: 0px 10px;
+    border-right: 1px solid #ffffff20;
+    border-left: 1px solid #ffffff20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    overflow-x: overlay;
+}
+
+#Agendamentos::-webkit-scrollbar{
+    height: 12px;
+    background-color: #ffffff40;
+}
+
+#Agendamentos::-webkit-scrollbar-thumb{
+    background-color: #ffffff80;
+}
+
+.Dia{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    gap: 10px 0%;
+    overflow: overlay;
+    min-width: 200px;
+    width: 20%;
+    max-width: 300px;
+    height: 95%;
+    padding: 0px 0px 0px 0px;
+    border: 1px solid #ffffff80;
+    box-shadow: 0 0 20px #000000;
+    scroll-padding: 5px;
+
+}
+
+.Dia::-webkit-scrollbar{
+    width: 10px;
+    border: none;
+}
+
+.Dia::-webkit-scrollbar-thumb{
+    width: 10px;
+    background-color: #ffffff20;
+    border-radius: 50px;
+    border: none;
+}
+
+
+.Dia > header{
+    font-size: 1.25rem;
+    border: 1px solid #ffffff;
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Agendamento{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+    width: 90%;
+    height: 25%;
+    padding: 7.5px 7.5px 7.5px 7.5px;
+    border: 1px solid #ffffff40;
+    border-top: 15px solid red;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 0 10px #000000;
+    background-color: #202020;
+}
+
+.Agendamento:hover{
+    background-color: #2f2f2f;
+    cursor: pointer;
+}
+
+.Agendamento > div {
+    position: relative;
+    width: 100%;
+    height: 30%;
+    gap: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.Horario{
+    position: relative;
+    top: 0%;
+    height: 75%;
+}
+/* Costumizações Globais */
+
+.UnderlinePersonalizada{
+    position: relative;  
+}
+
+.UnderlinePersonalizada::after, .UnderlinePersonalizada::before{
+    position: absolute;
+    bottom: -25%;
+    content: '';
+    min-width: 0%;
+    height: 2px;
+    background-color: #ffffff;
+    transition: 200ms;
+}
+
+.UnderlinePersonalizada::before{
+    left: 50%;
+}
+
+.UnderlinePersonalizada::after{
+    right: 50%;
+}
+
+.UnderlinePersonalizada:hover:after, .UnderlinePersonalizada:hover:before{
+    min-width: 50%;
+}
