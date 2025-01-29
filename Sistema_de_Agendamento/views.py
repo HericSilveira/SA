@@ -16,21 +16,10 @@ def Logout(request: WSGIRequest):
     return redirect('Login')
 
 def GetOrientadores(request: WSGIRequest):
+    Data: dict = loads(request.body.decode())
+    if 'ID' in Data.keys():
+        return JsonResponse({model_to_dict(Orientadores.objects.get(ID = Data['ID']))})
     return JsonResponse({model_to_dict(Orientador)['ID']: model_to_dict(Orientador) for Orientador in Orientadores.objects.all()})
-
-def GetAgendamentos(request: WSGIRequest):
-    Data = loads(request.body.decode())
-    Inicio = datetime.strptime(Data['Inicio'], '%Y-%m-%d')
-    Final = datetime.strptime(Data['Final'], '%Y-%m-%d') + (timedelta(days=1) - timedelta(seconds=1)) # conta feita para pegar todos os contatos até as 23:59:59 da Data Final
-    Models = Clientes.objects.filter(Data__range=[make_aware(Inicio), make_aware(Final)]).order_by('Data')
-    Models = {i: model_to_dict(Model) for i, Model in enumerate(Models)}
-
-    for model in Models:
-        print()
-        print(Models[model])
-        print()
-
-    return JsonResponse(Models)
 
 #Páginas 
 def Login(request: WSGIRequest):
