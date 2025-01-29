@@ -21,6 +21,21 @@ def GetOrientadores(request: WSGIRequest):
         return JsonResponse({model_to_dict(Orientadores.objects.get(ID = Data['ID']))})
     return JsonResponse({model_to_dict(Orientador)['ID']: model_to_dict(Orientador) for Orientador in Orientadores.objects.all()})
 
+def GetAgendamentos(request: WSGIRequest):
+    Dados: dict[str, str] = loads(request.body.decode())
+    
+    Inicio, Final = datetime.strptime(Dados['Inicio'], '%Y-%m-%d'), datetime.strptime(Dados['Final'], '%Y-%m-%d') + timedelta(days=1, seconds=-1)
+
+    Agendamentos = {i: model_to_dict(Cliente) for i, Cliente in enumerate(Clientes.objects.order_by('Data').filter(Data__range=[Inicio, Final]))}
+
+    Datas = []
+    while Inicio <= Final:
+        Datas.append(Inicio.date())
+        Inicio += timedelta(days=1)
+
+    print(len(Agendamentos))
+    return JsonResponse({'Datas': Datas, 'Agendamentos': Agendamentos})
+
 #Páginas 
 def Login(request: WSGIRequest):
     if request.method == "POST":

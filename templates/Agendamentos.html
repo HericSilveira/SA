@@ -5,26 +5,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'styles/Agendamentos.css' %}">
-    <meta name="csrf-token" id="TOKEN" content="{{ csrf_token }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+    <meta name="csrf-token" id="TOKEN" content="{{ csrf_token }}">
     <title>SA - Instituto Mix</title>
 </head>
 <body>
 
     <header>
         <ul id="Navbar">
-            <li><a class="UnderlinePersonalizada">Dashboard</a></li>
-            <li><a class="UnderlinePersonalizada">Agendamentos</a></li>
+            <li><a class="Options">Dashboard</a></li>
+            <li><a class="Options">Sair</a></li>
         </ul>
     </header>
 
     <main>
-        Nada aqui por enquanto
+        Nada aqui por enquanto...
+        <section id="DataPicker">
+            <ul id="AgendamentosFooter">
+                <li><a class="Options">Adicionar Agendamento</a></li>
+                <li><a class="Options">Editar Agendamento</a></li>
+                <li><a class="Options">Excluir Agendamento</a></li>
+                <li><input type="text" id="Data" placeholder="Selecione a data"></li>
+            </ul>
+        </section>
     </main>
 
+    
     <script src="{% static 'scripts/Agendamentos.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
 </body>
 </html>
