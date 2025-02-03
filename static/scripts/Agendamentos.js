@@ -43,12 +43,66 @@ async function LoadAgendamentos(TOKEN) {
 
         if (typeof Datas_Inicio_Final != 'string'){
             let Dados = await GetAgendamentos(Datas_Inicio_Final[0], Datas_Inicio_Final[1], TOKEN)
-            console.log(Dados)
+            let Dias = DayGenerator(Dados['Datas'])
+            AgendamentosGenerator(Dias, TOKEN)
         }
         else{
             let Dados = await GetAgendamentos(Datas_Inicio_Final, Datas_Inicio_Final, TOKEN)
-            console.log(Dados)
+            let Dias = DayGenerator(Dados['Datas'])
+            AgendamentosGenerator(Dias, TOKEN)
         }
     })
 }
 
+function DayGenerator(Dias) {
+    const Agendamentos = document.getElementById('Agendamentos') 
+    Agendamentos.innerHTML = ''
+
+    if (Dias.length > 4){
+        Agendamentos.style.justifyContent = 'start'
+    }
+
+    for (let Dia in Dias){
+        let Weekday = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
+        let Data = new Date(`${Dias[Dia]}T00:00:00`)
+        let DataFormatada = `${Weekday[Data.getDay()]} - ${Data.getDate() >= 10 ? Data.getDate() : '0'+Data.getDate()}/${Data.getMonth() >= 10 ? Data.getMonth()+1 : '0'+(Data.getMonth()+1)}`
+        
+        let Container = document.createElement('ul')
+        let ContainerHeader = document.createElement('header')
+        let ContainerBody = document.createElement('section')
+        Container.appendChild(ContainerHeader)
+        Container.appendChild(ContainerBody)
+        Container.classList.add('Dia')
+        Container.setAttribute('Data-Date', `${Data.getFullYear()}-${Data.getMonth()+1}-${Data.getDate()}`)
+        ContainerHeader.innerHTML = DataFormatada
+        Agendamentos.appendChild(Container)
+    }
+
+    return document.querySelectorAll('ul.Dia')
+}
+
+async function AgendamentosGenerator(Days, TOKEN) {
+
+    Days.forEach(async Day => {
+        Data = Day.getAttribute('Data-Date')
+        let Agendamentos = await GetAgendamentos(Data, Data, TOKEN)
+        let Container = Day.children[1]
+        Container.innerHTML = ''
+        for (let i = 0; i < Object.keys(Agendamentos.Agendamentos).length; i++) {
+            const Data = Agendamentos.Agendamentos[i];
+            let DataContainer = document.createElement('div');
+            let AgendamentoContainer = document.createElement('ul');
+            let Nome = document.createElement('li');
+            Nome.innerHTML = Data['Nome']
+            let Curso = document.createElement('li');
+            Curso.innerHTML = Data['Curso']
+            let Horario = document.createElement('li');
+            let _ = new Date(Data['Data'])
+            Horario.innerHTML = `${_.getHours()}:${_.getMinutes()}`
+            AgendamentoContainer.appendChild(Nome)
+            AgendamentoContainer.appendChild(Curso)
+            AgendamentoContainer.appendChild(Horario)
+            DataContainer.appendChild(AgendamentoContainer)
+        }
+    })
+}
