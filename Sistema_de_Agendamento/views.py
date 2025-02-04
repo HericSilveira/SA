@@ -17,8 +17,9 @@ def Logout(request: WSGIRequest):
 
 def GetOrientadores(request: WSGIRequest):
     Data: dict = loads(request.body.decode())
+    print(Data)
     if 'ID' in Data.keys():
-        return JsonResponse({model_to_dict(Orientadores.objects.get(ID = Data['ID']))})
+        return JsonResponse(model_to_dict(Orientadores.objects.get(ID = Data['ID'])))
     return JsonResponse({model_to_dict(Orientador)['ID']: model_to_dict(Orientador) for Orientador in Orientadores.objects.all()})
 
 def GetAgendamentos(request: WSGIRequest):

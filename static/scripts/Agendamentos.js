@@ -9,6 +9,21 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
+async function GetOrientador(OrientadorID, TOKEN){
+    let Response = await fetch('GetOrientadores', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': TOKEN
+        },
+        body: JSON.stringify({'ID': OrientadorID})
+    })
+
+    let Data = await Response.json()
+    
+    return Data
+}
+
 async function GetAgendamentos(Inicio, Final, TOKEN) {
     let Response = await fetch('GetAgendamentos', {
         method: 'POST',
@@ -65,11 +80,11 @@ function DayGenerator(Dias) {
     for (let Dia in Dias){
         let Weekday = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
         let Data = new Date(`${Dias[Dia]}T00:00:00`)
-        let DataFormatada = `${Weekday[Data.getDay()]} - ${Data.getDate() >= 10 ? Data.getDate() : '0'+Data.getDate()}/${Data.getMonth() >= 10 ? Data.getMonth()+1 : '0'+(Data.getMonth()+1)}`
-        
-        let Container = document.createElement('ul')
+        let DataFormatada = `${Weekday[Data.getDay()]} - ${Data.getDate() >= 10 ? Data.getDate() : '0'+Data.getDate()}/${Data.getMonth()+1 >= 10 ? Data.getMonth()+1 : '0'+(Data.getMonth()+1)}`
+        let Container = document.createElement('article')
         let ContainerHeader = document.createElement('header')
         let ContainerBody = document.createElement('section')
+        ContainerBody.style.height = '80%'
         Container.appendChild(ContainerHeader)
         Container.appendChild(ContainerBody)
         Container.classList.add('Dia')
@@ -78,7 +93,7 @@ function DayGenerator(Dias) {
         Agendamentos.appendChild(Container)
     }
 
-    return document.querySelectorAll('ul.Dia')
+    return document.querySelectorAll('article.Dia')
 }
 
 async function AgendamentosGenerator(Days, TOKEN) {
@@ -91,16 +106,24 @@ async function AgendamentosGenerator(Days, TOKEN) {
         for (let i = 0; i < Object.keys(Agendamentos.Agendamentos).length; i++) {
             const Data = Agendamentos.Agendamentos[i];
             let DadosContainer = document.createElement('ul');
+            DadosContainer.classList.add('Agendamento')
             let Nome = document.createElement('li');
-            Nome.innerHTML = Data['Nome']
+            Nome.innerHTML = `<span>Aluno:</span> ${Data['Nome']}`
             let Curso = document.createElement('li');
-            Curso.innerHTML = Data['Curso']
+            Curso.innerHTML = `<span>Curso:</span> ${Data['Curso']}`
+            let OrientadorContainer = document.createElement('li')
+            let Orientador = await GetOrientador(Data['Orientador']  , TOKEN)
+            OrientadorContainer.innerHTML = `<span>Orientador: </span> ${Orientador.Nome}`
             let Horario = document.createElement('li');
             let _ = new Date(Data['Data'])
-            Horario.innerHTML = `${_.getHours()}:${_.getMinutes()}`
+            Horario.innerHTML = `<span>Horario:</span> ${_.getHours()}:${_.getMinutes()}`
             DadosContainer.appendChild(Nome)
             DadosContainer.appendChild(Curso)
+            DadosContainer.appendChild(OrientadorContainer)
             DadosContainer.appendChild(Horario)
+            let Color = document.createElement('i')
+            Color.style.backgroundColor = `#${Orientador.Cor}60`
+            DadosContainer.appendChild(Color)
             Container.appendChild(DadosContainer)
         }
     })
