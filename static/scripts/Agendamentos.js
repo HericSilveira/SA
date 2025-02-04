@@ -90,8 +90,7 @@ async function AgendamentosGenerator(Days, TOKEN) {
         Container.innerHTML = ''
         for (let i = 0; i < Object.keys(Agendamentos.Agendamentos).length; i++) {
             const Data = Agendamentos.Agendamentos[i];
-            let DataContainer = document.createElement('div');
-            let AgendamentoContainer = document.createElement('ul');
+            let DadosContainer = document.createElement('ul');
             let Nome = document.createElement('li');
             Nome.innerHTML = Data['Nome']
             let Curso = document.createElement('li');
@@ -99,10 +98,10 @@ async function AgendamentosGenerator(Days, TOKEN) {
             let Horario = document.createElement('li');
             let _ = new Date(Data['Data'])
             Horario.innerHTML = `${_.getHours()}:${_.getMinutes()}`
-            AgendamentoContainer.appendChild(Nome)
-            AgendamentoContainer.appendChild(Curso)
-            AgendamentoContainer.appendChild(Horario)
-            DataContainer.appendChild(AgendamentoContainer)
+            DadosContainer.appendChild(Nome)
+            DadosContainer.appendChild(Curso)
+            DadosContainer.appendChild(Horario)
+            Container.appendChild(DadosContainer)
         }
     })
 }

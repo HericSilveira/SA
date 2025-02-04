@@ -23,12 +23,9 @@ def GetOrientadores(request: WSGIRequest):
 
 def GetAgendamentos(request: WSGIRequest):
     Dados: dict[str, str] = loads(request.body.decode())
-
-    
     
     Inicio, Final = datetime.strptime(Dados['Inicio'], '%Y-%m-%d'), datetime.strptime(Dados['Final'], '%Y-%m-%d') + timedelta(days=1, seconds=-1)
 
-    print(Inicio, Final)
     Agendamentos = {i: model_to_dict(Cliente) for i, Cliente in enumerate(Clientes.objects.order_by('Data').filter(Data__range=[Inicio, Final]))}
 
     Datas = []
