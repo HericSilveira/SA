@@ -1,15 +1,24 @@
-document.addEventListener('DOMContentLoaded', () => {
+const TOKEN = document.getElementById('TOKEN').content
 
-    const TOKEN = document.getElementById('TOKEN').content
+document.addEventListener('DOMContentLoaded', () => {
 
     flatpickr('#Data', {'dateFormat': 'd/m/Y','mode': 'range','locale': 'pt'})
 
-    LoadAgendamentos(TOKEN)
+    LoadAgendamentos()
+    InformationPanel()
     
 })
 
+function FormatarData(Data) {
+    let Horario = Data.split('T')[1]
+    Data = Data.split('T')[0].split('-').reverse()
+    Data[0] = Number(Data[0])
+    Data[1] = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][Number(Data[1])]
+    return Data.join(' de ') + ` as ${Horario.slice(0, 5)}`
+    
+}
 
-async function GetOrientador(OrientadorID, TOKEN){
+async function GetOrientador(OrientadorID){
     let Response = await fetch('GetOrientadores', {
         method: 'POST',
         headers: {
@@ -24,7 +33,7 @@ async function GetOrientador(OrientadorID, TOKEN){
     return Data
 }
 
-async function GetAgendamentos(Inicio, Final, TOKEN) {
+async function GetAgendamentos(Inicio, Final) {
     let Response = await fetch('GetAgendamentos', {
         method: 'POST',
         headers: {
@@ -39,7 +48,11 @@ async function GetAgendamentos(Inicio, Final, TOKEN) {
     return Data
 }
 
-async function LoadAgendamentos(TOKEN) {
+function name(params) {
+    
+}
+
+async function LoadAgendamentos() {
     const Data = document.getElementById('Data')
     Data.addEventListener('change', async () => {
         let Datas_Inicio_Final;
@@ -96,7 +109,7 @@ function DayGenerator(Dias) {
     return document.querySelectorAll('article.Dia')
 }
 
-async function AgendamentosGenerator(Days, TOKEN) {
+async function AgendamentosGenerator(Days) {
 
     Days.forEach(async Day => {
         Data = Day.getAttribute('Data-Date')
@@ -124,7 +137,55 @@ async function AgendamentosGenerator(Days, TOKEN) {
             let Color = document.createElement('i')
             Color.style.backgroundColor = `#${Orientador.Cor}60`
             DadosContainer.appendChild(Color)
+            DadosContainer.addEventListener('click', () => {
+                InformationStatus(false, Object.values(Data).splice(1))
+            })
             Container.appendChild(DadosContainer)
         }
     })
+}
+
+function InformationPanel(){
+    let Information = document.getElementById("Information");
+    let CloseInformationPanelButton = document.getElementById("CloseInformation");
+
+    CloseInformationPanelButton.addEventListener('click', () => {
+        if (Information.style.display == 'none'){
+            Information.style.display = 'flex';
+        }
+        else{
+            Information.style.display = 'none';
+        }
+    })
+}
+
+function InformationStatus(Hidden, Dados, TOKEN){
+    let Information = document.getElementById('Information')
+    let ContainerDosDados = document.querySelectorAll('#Dados span')
+
+    ContainerDosDados.forEach(async (Elemento, Index) => {
+        if (Dados[Index] == 1){
+            let Orientador = await GetOrientador(Dados[Index], TOKEN)
+            Elemento.innerHTML = Orientador.Nome
+        }
+
+        else if(Index == 5){
+            Elemento.innerHTML = FormatarData(Dados[Index])
+        }
+
+        else{
+            Elemento.innerHTML = Dados[Index]
+        }
+
+    })
+
+    if (Hidden){
+        Information.style.display = 'none';
+        Information.style.opacity = '0'
+    }
+
+    else{
+        Information.style.display = 'flex';
+        Information.style.opacity = '1';
+    }
 }

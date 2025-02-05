@@ -12,16 +12,20 @@
 <body>
 
     <section id="Information">
-        <ul>
-            <li>Nome: </li>
-            <li>Curso: </li>
-            <li>Acompanhante: </li>
-            <li>Celular: </li>
-            <li>Data de Agendamento: </li>
-            <li>Orientador: </li>
-            <li>Status</li>
-            <li>Presença</li>
-            <li>Observações: </li>
+        <ul id="InformationOptions">
+            <li><img src="{% static 'Edit.png' %}"><img src="{% static 'Remove.png' %}"></li>
+            <li><img src="{% static 'Fechar.png' %}" id="CloseInformation"></li>
+        </ul>
+        <ul id="Dados">
+            <li><img src="{% static 'Pessoa.png' %}" alt="Nome">Nome: <span></span></li>
+            <li><img src="{% static 'Pessoa.png' %}" alt="Orientador">Orientador: <span></span></li>
+            <li><img src="{% static 'Curso.png' %}" alt="Curso">Curso: <span></span></li>
+            <li><img src="{% static 'Acompanhante.png' %}" alt="Acompanhante">Acompanhante: <span></span></li>
+            <li><img src="{% static 'Celular.png' %}" alt="Celular">Celular: <span></span></li>
+            <li><img src="{% static 'Data.png' %}" alt="Data">Data de Agendamento: <span></span></li>
+            <li><img src="{% static 'Fechar.png' %}" alt="Status">Status: <span></span></li>
+            <li><img src="{% static 'Fechar.png' %}" alt="Presença">Presença: <span></span></li>
+            <li><div style="display: flex; align-items: center; justify-content: center;"><img src="{% static 'Fechar.png' %}" alt="Observações">Observações: </div><span></span></li>
         </ul>
     </section>
 
