@@ -64,9 +64,9 @@ async function GetAgendamentos(Inicio, Final) {
     return Data
 }
 
-// function Logout() {
-//     sessionStorage.clear()
-// }
+function Logout() {
+    sessionStorage.clear()
+}
 
 async function LoadAgendamentos() {
     const Data = document.getElementById('Data')
