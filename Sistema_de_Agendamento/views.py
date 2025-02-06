@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
 from django.forms.models import model_to_dict
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core.handlers.wsgi import WSGIRequest
-from django.utils.timezone import make_aware
 from .models import Orientadores, Clientes
-from json import dumps, loads
+from json import  loads
 from datetime import datetime, timedelta
 from argon2 import PasswordHasher
 
@@ -14,6 +13,15 @@ def Logout(request: WSGIRequest):
     if "ID" in request.session.keys():
         del request.session["ID"]
     return redirect('Login')
+
+def DelCostumer(request: WSGIRequest):
+    Data: dict = loads(request.body.decode())
+    try:
+        Clientes.objects.get(ID = Data['ID']).delete()
+        return HttpResponse(200)
+    except:
+        return HttpResponse(404)
+
 
 def GetOrientadores(request: WSGIRequest):
     Data: dict = loads(request.body.decode())

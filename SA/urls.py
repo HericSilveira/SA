@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from Sistema_de_Agendamento.views import Login, Logout, Agendamentos
-from Sistema_de_Agendamento.views import GetOrientadores, GetAgendamentos
+from Sistema_de_Agendamento.views import GetOrientadores, GetAgendamentos, DelCostumer
 
 urlpatterns = [
     #Páginas
@@ -29,4 +29,5 @@ urlpatterns = [
     path('Logout/', Logout, name='Logout'),
     path('Agendamentos/GetOrientadores', GetOrientadores, name='GetOrientadores'),
     path('Agendamentos/GetAgendamentos', GetAgendamentos, name='GetAgendamentos'),
+    path('Agendamentos/DelCostumer', DelCostumer, name='DelCostumer'),
 ]

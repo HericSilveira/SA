@@ -2,10 +2,13 @@ const TOKEN = document.getElementById('TOKEN').content
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    const LogoutButton = document.getElementById('')
+
     flatpickr('#Data', {'dateFormat': 'd/m/Y','mode': 'range','locale': 'pt'})
 
-    LoadAgendamentos()
-    InformationPanel()
+    LoadAgendamentos();
+    InformationPanel();
+    Remove();
     
 })
 
@@ -15,6 +18,19 @@ function FormatarData(Data) {
     Data[0] = Number(Data[0])
     Data[1] = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][Number(Data[1])]
     return Data.join(' de ') + ` as ${Horario.slice(0, 5)}`
+}
+
+async function DelCostumer(ID) {
+    response = await fetch('DelCostumer', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': TOKEN
+        },
+        body: JSON.stringify({'ID': ID})
+    })
+    let Data = await response.json()
+    return Data
     
 }
 
@@ -48,9 +64,9 @@ async function GetAgendamentos(Inicio, Final) {
     return Data
 }
 
-function name(params) {
-    
-}
+// function Logout() {
+//     sessionStorage.clear()
+// }
 
 async function LoadAgendamentos() {
     const Data = document.getElementById('Data')
@@ -89,6 +105,9 @@ function DayGenerator(Dias) {
     if (Dias.length > 4){
         Agendamentos.style.justifyContent = 'start'
     }
+    else{
+        Agendamentos.style.justifyContent = 'center'
+    }
 
     for (let Dia in Dias){
         let Weekday = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
@@ -118,6 +137,8 @@ async function AgendamentosGenerator(Days) {
         Container.innerHTML = ''
         for (let i = 0; i < Object.keys(Agendamentos.Agendamentos).length; i++) {
             const Data = Agendamentos.Agendamentos[i];
+            let Information = document.getElementById("Information");
+            Information.setAttribute('data-id', Data['ID'])
             let DadosContainer = document.createElement('ul');
             DadosContainer.classList.add('Agendamento')
             let Nome = document.createElement('li');
@@ -138,7 +159,7 @@ async function AgendamentosGenerator(Days) {
             Color.style.backgroundColor = `#${Orientador.Cor}60`
             DadosContainer.appendChild(Color)
             DadosContainer.addEventListener('click', () => {
-                InformationStatus(false, Object.values(Data).splice(1))
+                InformationStatus(false, Object.values(Data).splice(1), Data['ID'])
             })
             Container.appendChild(DadosContainer)
         }
@@ -150,18 +171,15 @@ function InformationPanel(){
     let CloseInformationPanelButton = document.getElementById("CloseInformation");
 
     CloseInformationPanelButton.addEventListener('click', () => {
-        if (Information.style.display == 'none'){
-            Information.style.display = 'flex';
-        }
-        else{
-            Information.style.display = 'none';
-        }
+        Information.style.opacity = '0'
+        Information.style.visibility = 'hidden'
     })
 }
 
-function InformationStatus(Hidden, Dados, TOKEN){
+function InformationStatus(Hidden, Dados, ID){
     let Information = document.getElementById('Information')
     let ContainerDosDados = document.querySelectorAll('#Dados span')
+    Information.setAttribute('data-id', ID)
 
     ContainerDosDados.forEach(async (Elemento, Index) => {
         if (Dados[Index] == 1){
@@ -180,12 +198,45 @@ function InformationStatus(Hidden, Dados, TOKEN){
     })
 
     if (Hidden){
-        Information.style.display = 'none';
-        Information.style.opacity = '0'
+        Information.style.visibility = 'hidden';
+        Information.style.opacity = '0';
     }
 
     else{
-        Information.style.display = 'flex';
+        Information.style.visibility = 'visible';
         Information.style.opacity = '1';
     }
+}
+
+async function Remove() {
+    let Information = document.getElementById("Information");
+    let RemoveIconButton = document.getElementById("RemoveButton")
+    let Confirmation = document.getElementById("DeleteConfirmationContainer")
+    let DontRemoveButton = document.getElementById('DontRemove')
+    let RemoveButton = document.getElementById('Remove')
+
+    RemoveIconButton.addEventListener('click', () => {
+
+        if (Confirmation.style.display == 'flex'){
+            Confirmation.style.display = 'none'
+        }
+        else{
+            Confirmation.style.display = 'flex'
+        }
+
+    })
+
+    RemoveButton.addEventListener('click', async () => {
+        let CostumerID = Information.getAttribute('data-id')
+        if (await DelCostumer(CostumerID) == 200){
+            document.getElementById('Data').dispatchEvent(new Event('change'))
+            Information.style.opacity = '0'
+            Information.style.visibility = 'hidden'
+        }
+        else{
+            alert('Ocorreu um erro, cliente já foi deletado ou não foi encontrado no banco de dados.')
+        }
+
+        Confirmation.style.display = 'none'
+    })
 }

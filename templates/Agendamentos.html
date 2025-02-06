@@ -13,7 +13,7 @@
 
     <section id="Information">
         <ul id="InformationOptions">
-            <li><img src="{% static 'Edit.png' %}"><img src="{% static 'Remove.png' %}"></li>
+            <li><img src="{% static 'Edit.png' %}" id="Edit"><img src="{% static 'Remove.png' %}" id="RemoveButton"></li>
             <li><img src="{% static 'Fechar.png' %}" id="CloseInformation"></li>
         </ul>
         <ul id="Dados">
@@ -28,6 +28,11 @@
             <li><div style="display: flex; align-items: center; justify-content: center;"><img src="{% static 'Fechar.png' %}" alt="Observações">Observações: </div><span></span></li>
         </ul>
     </section>
+
+    <ul id="DeleteConfirmationContainer">
+        <li>Tem certeza que deseja excluir este cliente?</li>
+        <li><button id="DontRemove">Não</button><button id="Remove">Sim</button></li>
+    </ul>
 
     <header>
         <ul id="Navbar">
