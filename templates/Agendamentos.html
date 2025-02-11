@@ -10,6 +10,24 @@
     <title>SA - Instituto Mix</title>
 </head>
 <body>
+    <section id="RegistrarContainer">
+        <header><img src="{% static 'Fechar.png' %}" alt="" height="80%"></header>
+        <main id="Registrar">
+            <input type="text" id="Nome" placeholder="Nome" minlength="6" autocomplete="off">
+            <select name="Orientador" id="Orientador">
+                <option value="" selected disabled>Selecione um Orientador</option>
+                {% for Orientador in Orientadores %}
+                <option value="{{ Orientador.ID }}">{{ Orientador.Nome }}</option>
+                {% endfor %}
+            </select>
+            <input type="date" id="DataAgendamento" placeholder="Data do Agendamento" minlength="10" autocomplete="off">
+            <input type="text" id="Acompanhante" placeholder="Acompanhante" minlength="0" autocomplete="off">
+            <input type="text" id="Curso" placeholder="Curso Desejado" minlength="4" autocomplete="off">
+            <input type="number" id="Celular" placeholder="Celular" minlength="11" autocomplete="off">
+            <textarea type="text" id="Observacoes" placeholder="Observações" minlength="10" autocomplete="off"></textarea>
+            <button id="RegistrarButton">Registrar</button>
+        </main>    
+    </section>
 
     <section id="Information">
         <ul id="InformationOptions">
@@ -37,7 +55,7 @@
     <header>
         <ul id="Navbar">
             <li><a class="Options">Dashboard</a></li>
-            <li><a class="Options">Sair</a></li>
+            <li><a class="Options" id="Logout">Sair</a></li>
         </ul>
     </header>
 
@@ -58,7 +76,7 @@
 
     <footer id="DataPicker">
         <ul id="AgendamentosFooter">
-            <li><a class="Options">Adicionar Agendamento</a></li>
+            <li><a class="Options" id="Add">Adicionar Agendamento</a></li>
             <li><a class="Options">Editar Agendamento</a></li>
             <li><a class="Options">Excluir Agendamento</a></li>
             <li><input type="text" id="Data" placeholder="Selecione a data"></li>

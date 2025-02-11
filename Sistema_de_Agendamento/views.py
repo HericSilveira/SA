@@ -14,7 +14,21 @@ def Logout(request: WSGIRequest):
         del request.session["ID"]
     return redirect('Login')
 
-def DelCostumer(request: WSGIRequest):
+def add_cliente(request: WSGIRequest):
+    Data: dict = loads(request.body.decode())
+    Clientes(
+        Nome = Data['Nome'],
+        Orientador = Orientadores.objects.get(ID = Data['Orientador']),
+        Acompanhante = Data['Acompanhante'],
+        Curso = Data['Curso'],
+        Celular = Data['Celular'],
+        Data = datetime.strptime(Data['Data'], '%d/%m/%Y %H:%M'),
+        Observacoes = Data['Observacoes']
+    ).save()
+    return HttpResponse(200)
+    ...
+
+def DeleteCostumer(request: WSGIRequest):
     Data: dict = loads(request.body.decode())
     try:
         Clientes.objects.get(ID = Data['ID']).delete()
@@ -67,6 +81,6 @@ def Login(request: WSGIRequest):
                 
 def Agendamentos(request: WSGIRequest):
     if "ID" in request.session:
-        Usuario = Orientadores.objects.get(ID=request.session['ID']).Nome
-        return render(request, 'Agendamentos.html', {'Usuario': Usuario})
+        Orientador = Orientadores.objects.all()
+        return render(request, 'Agendamentos.html', {'Orientadores': Orientador})
     return redirect('Login')

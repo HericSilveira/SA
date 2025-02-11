@@ -2,14 +2,14 @@ const TOKEN = document.getElementById('TOKEN').content
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const LogoutButton = document.getElementById('')
+    flatpickr('#Data', {'dateFormat': 'd/m/Y','mode': 'range','locale': 'pt'});
+    flatpickr('#DataAgendamento', {'dateFormat': 'd/m/Y H:i','locale': 'pt', 'enableTime': true, 'time_24hr': true});
 
-    flatpickr('#Data', {'dateFormat': 'd/m/Y','mode': 'range','locale': 'pt'})
-
+    Logout();
     LoadAgendamentos();
     InformationPanel();
     Remove();
-    
+    Adicionar_Agendamento();
 })
 
 function FormatarData(Data) {
@@ -20,8 +20,16 @@ function FormatarData(Data) {
     return Data.join(' de ') + ` as ${Horario.slice(0, 5)}`
 }
 
-async function DelCostumer(ID) {
-    response = await fetch('DelCostumer', {
+function Logout() {
+    let ID = document.getElementById('Logout')
+    ID.addEventListener('click', () => {
+        fetch('Logout')
+        window.location.href = ''
+    })
+}
+
+async function DeleteCostumer(ID) {
+    response = await fetch('DeleteCostumer', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -32,6 +40,86 @@ async function DelCostumer(ID) {
     let Data = await response.json()
     return Data
     
+}
+
+async function Adicionar_Agendamento() {
+
+    let RegistrarContainer = document.getElementById('RegistrarContainer')
+    document.getElementById('Add').addEventListener('click', () => {
+        if (RegistrarContainer.style.visibility == 'hidden' || RegistrarContainer.style.visibility == ''){
+            RegistrarContainer.style.visibility = 'visible';
+        }
+        else{
+            RegistrarContainer.style.visibility = 'hidden';
+        }
+    })
+    document.querySelector('#RegistrarContainer > header > img').addEventListener('click', () => {
+        RegistrarContainer.style.visibility = 'hidden';
+    })
+
+
+    let Adicionar_Button = document.getElementById('RegistrarButton')
+    let Inputs = document.querySelectorAll('#Registrar > input, #Registrar > select, #Registrar textarea')
+    Adicionar_Button.addEventListener('click', async () => {
+        let Complete = true;
+        for (const Elemento of Inputs) {
+            if (Elemento.getAttribute('id') == 'DataAgendamento' && Elemento.value.length <= Elemento.getAttribute('minlength')){
+                Complete = false
+                Elemento.value = '';
+                Elemento.setAttribute('placeholder', `Data Inválida`);
+                Elemento.style.backgroundColor = '#aa0000'
+                setTimeout(() => {
+                    Elemento.style.backgroundColor = ''
+                    Elemento.setAttribute('placeholder', 'Data do Agendamento')
+                }, 2000);
+            }
+            else if (Elemento.getAttribute('id') == 'Orientador'){
+                if (Elemento.value == ''){
+                    Complete = false
+                    Elemento.style.backgroundColor = '#aa0000'
+                    Elemento.children[0].text = 'Orientador Inválido!'
+                    setTimeout(() => {
+                        Elemento.style.backgroundColor = ''
+                        Elemento.children[0].text = 'Selecione um Orientador'
+                    }, 2000);
+                }
+            }
+
+            else{
+                if (Elemento.value.length < Elemento.getAttribute('minlength')){
+                    Complete = false
+                    Elemento.style.backgroundColor = '#aa0000';
+                    setTimeout(() => {
+                        Elemento.style.backgroundColor = '';
+                    }, 2000);
+                }
+            }
+        }
+        if (Complete){
+            Resposta = await fetch('AddCliente', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': TOKEN
+                },
+                body: JSON.stringify({
+                    'Nome': Inputs[0].value,
+                    'Orientador': Inputs[1].value,
+                    'Data': Inputs[2].value,
+                    'Acompanhante': Inputs[3].value,
+                    'Curso': Inputs[4].value,
+                    'Celular': Inputs[5].value,
+                    'Observacoes': Inputs[6].value
+                })
+            })
+
+            Inputs.forEach((Elemento => {
+                Elemento.value = ''
+            }))
+            RegistrarContainer.style.visibility = 'hidden';
+
+        }
+    })
 }
 
 async function GetOrientador(OrientadorID){
@@ -64,8 +152,11 @@ async function GetAgendamentos(Inicio, Final) {
     return Data
 }
 
-function Logout() {
-    sessionStorage.clear()
+async function AddAgendamento(){
+    document.getElementById('Add').addEventListener('click', () => {
+        let AddPanel = document.createElement('section')
+        let 
+    })
 }
 
 async function LoadAgendamentos() {
@@ -228,7 +319,7 @@ async function Remove() {
 
     RemoveButton.addEventListener('click', async () => {
         let CostumerID = Information.getAttribute('data-id')
-        if (await DelCostumer(CostumerID) == 200){
+        if (await DeleteCostumer(CostumerID) == 200){
             document.getElementById('Data').dispatchEvent(new Event('change'))
             Information.style.opacity = '0'
             Information.style.visibility = 'hidden'
