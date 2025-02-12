@@ -302,6 +302,7 @@ body > header{
     width: 20%;
     height: 100%;
     border: 1px solid #ffffff20;
+    overflow: hidden;
 }
 
 .Dia > header{
@@ -309,25 +310,30 @@ body > header{
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: clamp(25px, 5%, 35px);
+    min-height: 50px;
     color: #ffffff;
     border-bottom: 2px solid #ffffff20;
 }
 
 .Dia > section{
+    height: calc(100% - 50px);
     position: relative;
     padding-top: 5px;
     display: flex;
+    overflow-y: overlay;
     flex-direction: column;
     justify-content: start;
     align-items: center;
+    gap: 10px;
 }
 
 .Agendamento{
     background-color: #202020;
     border-radius: 10px ;
     width: 95%;
-    height: clamp(100px, 20dvh, 125px);
+    height: 20dvh;
+    max-height: 125px;
+    min-height: 100px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

@@ -39,7 +39,6 @@ async function DeleteCostumer(ID) {
     })
     let Data = await response.json()
     return Data
-    
 }
 
 async function Adicionar_Agendamento() {
@@ -152,13 +151,6 @@ async function GetAgendamentos(Inicio, Final) {
     return Data
 }
 
-async function AddAgendamento(){
-    document.getElementById('Add').addEventListener('click', () => {
-        let AddPanel = document.createElement('section')
-        let 
-    })
-}
-
 async function LoadAgendamentos() {
     const Data = document.getElementById('Data')
     Data.addEventListener('change', async () => {
@@ -207,7 +199,6 @@ function DayGenerator(Dias) {
         let Container = document.createElement('article')
         let ContainerHeader = document.createElement('header')
         let ContainerBody = document.createElement('section')
-        ContainerBody.style.height = '80%'
         Container.appendChild(ContainerHeader)
         Container.appendChild(ContainerBody)
         Container.classList.add('Dia')
@@ -237,11 +228,11 @@ async function AgendamentosGenerator(Days) {
             let Curso = document.createElement('li');
             Curso.innerHTML = `<span>Curso:</span> ${Data['Curso']}`
             let OrientadorContainer = document.createElement('li')
-            let Orientador = await GetOrientador(Data['Orientador']  , TOKEN)
+            let Orientador = await GetOrientador(Data['Orientador'], TOKEN)
             OrientadorContainer.innerHTML = `<span>Orientador: </span> ${Orientador.Nome}`
             let Horario = document.createElement('li');
             let _ = new Date(Data['Data'])
-            Horario.innerHTML = `<span>Horario:</span> ${_.getHours()}:${_.getMinutes()}`
+            Horario.innerHTML = `<span>Horario:</span> ${_.getHours()}:${_.getMinutes() >= 10 ? _.getMinutes() : `0${_.getMinutes()}`}`
             DadosContainer.appendChild(Nome)
             DadosContainer.appendChild(Curso)
             DadosContainer.appendChild(OrientadorContainer)
@@ -273,24 +264,25 @@ function InformationStatus(Hidden, Dados, ID){
     Information.setAttribute('data-id', ID)
 
     ContainerDosDados.forEach(async (Elemento, Index) => {
-        if (Dados[Index] == 1){
-            let Orientador = await GetOrientador(Dados[Index], TOKEN)
-            Elemento.innerHTML = Orientador.Nome
+        if (Index == 1){
+            let Orientador = await GetOrientador(Dados[Index]);
+            Elemento.innerHTML = Orientador.Nome;
         }
-
         else if(Index == 5){
-            Elemento.innerHTML = FormatarData(Dados[Index])
+            let Data = Dados[Index].split('T').slice(0, 1)[0].split('-').reverse().join('/')
+            let Ano = Data.split('/')[2]
+            let Mes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][Number(Data.split('/')[1])]
+            let Dia = Data.split('/')[0]
+            let Horario = Dados[Index].split('T').slice(1, 2)[0]
+            Elemento.innerHTML = `${Dia} de ${Mes} de ${Ano} às ${Horario.slice(0, 5)}`
         }
-
         else{
-            Elemento.innerHTML = Dados[Index]
+            Elemento.innerHTML = Dados[Index];
         }
-
     })
 
     if (Hidden){
         Information.style.visibility = 'hidden';
-        Information.style.opacity = '0';
     }
 
     else{
