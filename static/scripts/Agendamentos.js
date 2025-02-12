@@ -4,11 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     flatpickr('#Data', {'dateFormat': 'd/m/Y','mode': 'range','locale': 'pt'});
     flatpickr('#DataAgendamento', {'dateFormat': 'd/m/Y H:i','locale': 'pt', 'enableTime': true, 'time_24hr': true});
 
+
     Logout();
     LoadAgendamentos();
     InformationPanel();
     Remove();
-    Adicionar_Agendamento();
+    adicionar_agendamento();
+    editar_agendamento();
 })
 
 function FormatarData(Data) {
@@ -40,12 +42,14 @@ async function DeleteCostumer(ID) {
     return Data
 }
 
-async function Adicionar_Agendamento() {
+async function adicionar_agendamento() {
 
     let RegistrarContainer = document.getElementById('RegistrarContainer')
+
     document.getElementById('Add').addEventListener('click', () => {
         if (RegistrarContainer.style.visibility == 'hidden' || RegistrarContainer.style.visibility == ''){
             RegistrarContainer.style.visibility = 'visible';
+            RegistrarContainer.style.opacity = 1;
         }
         else{
             RegistrarContainer.style.visibility = 'hidden';
@@ -53,6 +57,7 @@ async function Adicionar_Agendamento() {
     })
     document.querySelector('#RegistrarContainer > header > img').addEventListener('click', () => {
         RegistrarContainer.style.visibility = 'hidden';
+        RegistrarContainer.style.opacity = 0;
     })
 
 
@@ -221,6 +226,12 @@ async function AgendamentosGenerator(Days) {
             let Information = document.getElementById("Information");
             Information.setAttribute('data-id', Data['ID'])
             let DadosContainer = document.createElement('ul');
+            let botao_editar = document.createElement('i')
+            botao_editar.classList.add('editbtn')
+            botao_editar.addEventListener('click', (event) =>{
+                event.stopPropagation()
+                console.log('Hello World!')
+            })
             DadosContainer.classList.add('Agendamento')
             let Nome = document.createElement('li');
             Nome.innerHTML = `<span>Aluno:</span> ${Data['Nome']}`
@@ -236,7 +247,10 @@ async function AgendamentosGenerator(Days) {
             DadosContainer.appendChild(Curso)
             DadosContainer.appendChild(OrientadorContainer)
             DadosContainer.appendChild(Horario)
+            DadosContainer.appendChild(botao_editar)
+            DadosContainer.setAttribute('data-orientador', Orientador['ID'])
             let Color = document.createElement('i')
+            Color.classList.add('ball')
             Color.style.backgroundColor = `#${Orientador.Cor}60`
             DadosContainer.appendChild(Color)
             DadosContainer.addEventListener('click', () => {
@@ -292,18 +306,22 @@ function InformationStatus(Hidden, Dados, ID){
 
 async function Remove() {
     let Information = document.getElementById("Information");
-    let RemoveIconButton = document.getElementById("RemoveButton")
-    let Confirmation = document.getElementById("DeleteConfirmationContainer")
-    let DontRemoveButton = document.getElementById('DontRemove')
-    let RemoveButton = document.getElementById('Remove')
+    let RemoveIconButton = document.getElementById("RemoveButton");
+    let Confirmation = document.getElementById("DeleteConfirmationContainer");
+    let DontRemoveButton = document.getElementById('DontRemove');
+    let RemoveButton = document.getElementById('Remove');
+
+    DontRemoveButton.addEventListener('click', () => {
+        Confirmation.style.display = 'none';
+    })
 
     RemoveIconButton.addEventListener('click', () => {
 
         if (Confirmation.style.display == 'flex'){
-            Confirmation.style.display = 'none'
+            Confirmation.style.display = 'none';
         }
         else{
-            Confirmation.style.display = 'flex'
+            Confirmation.style.display = 'flex';
         }
 
     })
@@ -320,5 +338,17 @@ async function Remove() {
         }
 
         Confirmation.style.display = 'none'
+    })
+}
+
+async function editar_agendamentos() {
+    let orientador = document.querySelector('body').getAttribute('data-userid')
+    let agendamentos = document.querySelectorAll('.Agendamento')
+    let agendamentos_do_orientador = []
+    agendamentos.forEach((agendamento, index) => {
+        if (agendamento.getAttribute('data-orientador') == orientador){
+            agendamento.querySelector('')
+            agendamentos_do_orientador.push(agendamento)
+        }
     })
 }

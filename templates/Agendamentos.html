@@ -9,7 +9,7 @@
     <meta name="csrf-token" id="TOKEN" content="{{ csrf_token }}">
     <title>SA - Instituto Mix</title>
 </head>
-<body>
+<body data-userid = "{{ Usuario.ID }}">
     <section id="RegistrarContainer">
         <header><img src="{% static 'Fechar.png' %}" alt="" height="80%"></header>
         <main id="Registrar">
@@ -60,25 +60,12 @@
     </header>
 
     <main id="Agendamentos">
-        <!-- <ul class="Dia">
-            <header>Domingo 01/02</header>
-            <section>
-                <ul class="Agendamento">
-                    <li><span>Nome:</span> Heric</li>
-                    <li><span>Curso:</span> Informatica</li>
-                    <li><span>Orientador:</span> Gustavo</li>
-                    <li><span>Horário:</span> 10:00</li>
-                    <i></i>
-                </ul>
-            </section>
-        </ul> -->
+        
     </main>
 
     <footer id="DataPicker">
         <ul id="AgendamentosFooter">
-            <li><a class="Options" id="Add">Adicionar Agendamento</a></li>
-            <li><a class="Options">Editar Agendamento</a></li>
-            <li><a class="Options">Excluir Agendamento</a></li>
+            <li><a class="Options" id="Add"><img src="{% static 'adicionar.svg' %}" alt="" height="40px">Adicionar Agendamento</a></li>
             <li><input type="text" id="Data" placeholder="Selecione a data"></li>
         </ul>
     </footer>

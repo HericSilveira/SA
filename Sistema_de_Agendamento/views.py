@@ -39,9 +39,7 @@ def DeleteCostumer(request: WSGIRequest):
 
 def GetOrientadores(request: WSGIRequest):
     Data: dict = loads(request.body.decode())
-    print(Data)
     if 'ID' in Data.keys():
-        print(int(Data['ID']))
         return JsonResponse(model_to_dict(Orientadores.objects.get(ID = int(Data['ID']))))
     return JsonResponse({model_to_dict(Orientador)['ID']: model_to_dict(Orientador) for Orientador in Orientadores.objects.all()})
 
@@ -61,7 +59,6 @@ def GetAgendamentos(request: WSGIRequest):
         Datas.append(Inicio.date())
         Inicio += timedelta(days=1)
 
-    print(len(Agendamentos))
     return JsonResponse({'Datas': Datas, 'Agendamentos': Agendamentos})
 
 #Páginas 
@@ -87,5 +84,9 @@ def Login(request: WSGIRequest):
 def Agendamentos(request: WSGIRequest):
     if "ID" in request.session:
         Orientador = Orientadores.objects.all()
-        return render(request, 'Agendamentos.html', {'Orientadores': Orientador})
+        return render(request, 
+            'Agendamentos.html', {
+                'Orientadores': Orientador, 
+                "Usuario": Orientadores.objects.get(ID = request.session["ID"])
+                })
     return redirect('Login')
