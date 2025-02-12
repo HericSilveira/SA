@@ -66,6 +66,8 @@ def GetAgendamentos(request: WSGIRequest):
 
 #Páginas 
 def Login(request: WSGIRequest):
+    # Orientadores(Nome = "Gustavo", Senha = PasswordHasher().hash("123"), Cor = "f542ec").save()
+    # Orientadores(Nome = "Josine", Senha = PasswordHasher().hash("123"), Cor = "0000ff").save()
     if request.method == "POST":
         Dados: dict[str, str] = loads(request.body.decode())
         for Orientador in list(Orientadores.objects.filter(Nome = Dados['Usuario'])):

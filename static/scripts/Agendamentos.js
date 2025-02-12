@@ -1,7 +1,6 @@
 const TOKEN = document.getElementById('TOKEN').content
 
 document.addEventListener('DOMContentLoaded', () => {
-
     flatpickr('#Data', {'dateFormat': 'd/m/Y','mode': 'range','locale': 'pt'});
     flatpickr('#DataAgendamento', {'dateFormat': 'd/m/Y H:i','locale': 'pt', 'enableTime': true, 'time_24hr': true});
 
@@ -116,7 +115,7 @@ async function Adicionar_Agendamento() {
                 Elemento.value = ''
             }))
             RegistrarContainer.style.visibility = 'hidden';
-
+            document.getElementById('Data').dispatchEvent(new Event('change'))
         }
     })
 }
@@ -193,7 +192,7 @@ function DayGenerator(Dias) {
     }
 
     for (let Dia in Dias){
-        let Weekday = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
+        let Weekday = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
         let Data = new Date(`${Dias[Dia]}T00:00:00`)
         let DataFormatada = `${Weekday[Data.getDay()]} - ${Data.getDate() >= 10 ? Data.getDate() : '0'+Data.getDate()}/${Data.getMonth()+1 >= 10 ? Data.getMonth()+1 : '0'+(Data.getMonth()+1)}`
         let Container = document.createElement('article')

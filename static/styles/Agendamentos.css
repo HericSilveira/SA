@@ -300,7 +300,7 @@ body > header{
     box-shadow: 0px 0px 10px #000000;
     min-width: 200px;
     width: 20%;
-    height: 100%;
+    height: calc(100% - 10px);
     border: 1px solid #ffffff20;
     overflow: hidden;
 }
@@ -310,7 +310,7 @@ body > header{
     justify-content: center;
     align-items: center;
     width: 100%;
-    min-height: 50px;
+    min-height: 40px;
     color: #ffffff;
     border-bottom: 2px solid #ffffff20;
 }
