@@ -46,7 +46,7 @@ async function adicionar_agendamento() {
 
     let RegistrarContainer = document.getElementById('RegistrarContainer')
 
-    document.getElementById('Add').addEventListener('click', () => {
+    document.querySelector('#AgendamentosFooter li:first-child').addEventListener('click', () => {
         if (RegistrarContainer.style.visibility == 'hidden' || RegistrarContainer.style.visibility == ''){
             RegistrarContainer.style.visibility = 'visible';
             RegistrarContainer.style.opacity = 1;
