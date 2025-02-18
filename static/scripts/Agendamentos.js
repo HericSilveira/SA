@@ -1,16 +1,16 @@
 const TOKEN = document.getElementById('TOKEN').content
+let WindowEventsAdded = false
 
 document.addEventListener('DOMContentLoaded', () => {
     flatpickr('#Data', {'dateFormat': 'd/m/Y','mode': 'range','locale': 'pt'});
     flatpickr('#DataAgendamento', {'dateFormat': 'd/m/Y H:i','locale': 'pt', 'enableTime': true, 'time_24hr': true});
-
+    
 
     Logout();
     LoadAgendamentos();
     InformationPanel();
     Remove();
     adicionar_agendamento();
-    editar_agendamento();
 })
 
 function FormatarData(Data) {
@@ -189,11 +189,24 @@ function DayGenerator(Dias) {
     const Agendamentos = document.getElementById('Agendamentos') 
     Agendamentos.innerHTML = ''
 
-    if (Dias.length > 4){
-        Agendamentos.style.justifyContent = 'start'
+    if (!WindowEventsAdded){
+        WindowEventsAdded = true
+        window.addEventListener('resize', () => {
+            if(window.innerWidth < 768){
+                Dias.length > 1 ? Agendamentos.style.justifyContent = 'start' : Agendamentos.style.justifyContent = 'center'
+            }
+            else{
+                Dias.length > 4 ? Agendamentos.style.justifyContent = 'start' : Agendamentos.style.justifyContent = 'center'
+            }
+        })
+    }
+    
+
+    if(window.innerWidth < 768){
+        Dias.length > 1 ? Agendamentos.style.justifyContent = 'start' : Agendamentos.style.justifyContent = 'center'
     }
     else{
-        Agendamentos.style.justifyContent = 'center'
+        Dias.length > 4 ? Agendamentos.style.justifyContent = 'start' : Agendamentos.style.justifyContent = 'center'
     }
 
     for (let Dia in Dias){
@@ -218,20 +231,14 @@ async function AgendamentosGenerator(Days) {
 
     Days.forEach(async Day => {
         Data = Day.getAttribute('Data-Date')
-        let Agendamentos = await GetAgendamentos(Data, Data, TOKEN)
+        let Agendamentos = await GetAgendamentos(Data, Data)
         let Container = Day.children[1]
         Container.innerHTML = ''
         for (let i = 0; i < Object.keys(Agendamentos.Agendamentos).length; i++) {
             const Data = Agendamentos.Agendamentos[i];
-            let Information = document.getElementById("Information");
-            Information.setAttribute('data-id', Data['ID'])
             let DadosContainer = document.createElement('ul');
             let botao_editar = document.createElement('i')
             botao_editar.classList.add('editbtn')
-            botao_editar.addEventListener('click', (event) =>{
-                event.stopPropagation()
-                console.log('Hello World!')
-            })
             DadosContainer.classList.add('Agendamento')
             let Nome = document.createElement('li');
             Nome.innerHTML = `<span>Aluno:</span> ${Data['Nome']}`
@@ -249,6 +256,10 @@ async function AgendamentosGenerator(Days) {
             DadosContainer.appendChild(Horario)
             DadosContainer.appendChild(botao_editar)
             DadosContainer.setAttribute('data-orientador', Orientador['ID'])
+            botao_editar.addEventListener('click', (event) =>{
+                event.stopPropagation()
+                editar_agendamento(Data)
+            })
             let Color = document.createElement('i')
             Color.classList.add('ball')
             Color.style.backgroundColor = `#${Orientador.Cor}60`
@@ -266,6 +277,7 @@ function InformationPanel(){
     let CloseInformationPanelButton = document.getElementById("CloseInformation");
 
     CloseInformationPanelButton.addEventListener('click', () => {
+        Information.removeAttribute('data-id')
         Information.style.opacity = '0'
         Information.style.visibility = 'hidden'
     })
@@ -273,8 +285,51 @@ function InformationPanel(){
 
 function InformationStatus(Hidden, Dados, ID){
     let Information = document.getElementById('Information')
-    let ContainerDosDados = document.querySelectorAll('#Dados span')
-    Information.setAttribute('data-id', ID)
+    let ContainerDosDados;
+    document.querySelectorAll('#Dados span').length > 0 ? ContainerDosDados = document.querySelectorAll('#Dados span') : ContainerDosDados = document.querySelectorAll('#Dados input, #Dados textarea');
+    Information.setAttribute('data-id', ID);
+
+    document.querySelectorAll('.Salvar').forEach((Elemento) => {Elemento.remove()});
+
+    ContainerDosDados.forEach(async (Elemento, Index) => {
+        let Mensagem = document.createElement('span');
+
+        if (Index == 1){
+            let Orientador = await GetOrientador(Dados[Index]);
+            Mensagem.innerHTML = Orientador.Nome;
+        }
+        else if(Index == 5){
+            let Data = Dados[Index].split('T').slice(0, 1)[0].split('-').reverse().join('/')
+            let Ano = Data.split('/')[2]
+            let Mes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][Number(Data.split('/')[1])]
+            let Dia = Data.split('/')[0]
+            let Horario = Dados[Index].split('T').slice(1, 2)[0]
+            Mensagem.innerHTML = `${Dia} de ${Mes} de ${Ano} às ${Horario.slice(0, 5)}`
+        }
+        else{
+            Mensagem.innerHTML = Dados[Index];
+        }
+        Elemento.replaceWith(Mensagem);
+    })
+
+    if (Hidden){
+        Information.style.visibility = 'hidden';
+    }
+
+    else{
+        Information.style.visibility = 'visible';
+        Information.style.opacity = '1';
+    }
+}
+
+function InformationEdit(Hidden, Dados, ID){
+    let Information = document.getElementById('Information');
+    let ContainerDosDados = document.querySelectorAll('#Dados span');
+    Information.setAttribute('data-id', ID);
+    
+    document.querySelectorAll('.Salvar').forEach((Elemento) => {Elemento.remove()});
+
+    let NewData = {}
 
     ContainerDosDados.forEach(async (Elemento, Index) => {
         if (Index == 1){
@@ -283,16 +338,48 @@ function InformationStatus(Hidden, Dados, ID){
         }
         else if(Index == 5){
             let Data = Dados[Index].split('T').slice(0, 1)[0].split('-').reverse().join('/')
-            let Ano = Data.split('/')[2]
-            let Mes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][Number(Data.split('/')[1])]
-            let Dia = Data.split('/')[0]
-            let Horario = Dados[Index].split('T').slice(1, 2)[0]
-            Elemento.innerHTML = `${Dia} de ${Mes} de ${Ano} às ${Horario.slice(0, 5)}`
+            let Horario = Dados[Index].split('T')[1].slice(0, 5)
+            Elemento.innerHTML = `${Data} ${Horario}`
         }
         else{
             Elemento.innerHTML = Dados[Index];
         }
+
+        let NewElemento;
+        Index != ContainerDosDados.length - 1 ? NewElemento = document.createElement('input') : NewElemento = document.createElement('textarea');
+        Index == 4 ? NewElemento.type = 'number' : NewElemento.type = 'text';
+        if (Index == 5){
+            flatpickr(NewElemento, {'dateFormat': 'd/m/Y H:i','locale': 'pt', 'enableTime': true, 'time_24hr': true})
+        }
+        NewElemento.value = Elemento.innerHTML
+        NewElemento.classList.add('EditOptions')
+        Elemento.parentNode.replaceChild(NewElemento, Elemento)
+        
     })
+    let Salvar = document.createElement('button')
+    Salvar.classList.add('Salvar')
+    Salvar.innerHTML = 'Salvar Alterações'
+    Salvar.addEventListener('click', async () => {
+        Information.style.visibility = 'hidden'
+        ContainerDosDados = document.querySelectorAll('#Dados input, #Dados textarea')
+        NewData["ID"] = ID
+        ContainerDosDados.forEach((Elemento, Index) => {
+            let Keys = ['Nome', 'Orientador', 'Acompanhante', 'Curso', 'Celular', 'Data', 'Status', 'Presenca', 'Observacoes']
+            NewData[Keys[Index]] = Elemento.value
+        })
+
+        response = await fetch('edit_cliente', {
+            method: "POST",
+            headers: {
+                "Content-Type": 'application/json',
+                "X-CSRFToken": TOKEN,
+            },
+            body: JSON.stringify(NewData)
+        })
+        document.getElementById('Data').dispatchEvent(new Event('change'))
+
+    })
+    document.getElementById('Dados').appendChild(Salvar);
 
     if (Hidden){
         Information.style.visibility = 'hidden';
@@ -341,14 +428,6 @@ async function Remove() {
     })
 }
 
-async function editar_agendamentos() {
-    let orientador = document.querySelector('body').getAttribute('data-userid')
-    let agendamentos = document.querySelectorAll('.Agendamento')
-    let agendamentos_do_orientador = []
-    agendamentos.forEach((agendamento, index) => {
-        if (agendamento.getAttribute('data-orientador') == orientador){
-            agendamento.querySelector('')
-            agendamentos_do_orientador.push(agendamento)
-        }
-    })
+async function editar_agendamento(Dados) {
+    InformationEdit(false, Object.values(Dados).slice(1), Dados['ID']) 
 }

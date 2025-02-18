@@ -14,6 +14,22 @@ def Logout(request: WSGIRequest):
         del request.session["ID"]
     return redirect('Login')
 
+def edit_cliente(request: WSGIRequest):
+    Data: dict = loads(request.body.decode())
+    Cliente = Clientes.objects.get(ID = Data['ID'])
+    Cliente.Nome = Data['Nome']
+    Cliente.Celular = Data['Celular']
+    Cliente.Acompanhante = Data['Acompanhante']
+    Cliente.Curso = Data['Curso']
+    Cliente.Data = datetime.strptime(Data['Data'], '%d/%m/%Y %H:%M')
+    Cliente.Orientador = Orientadores.objects.get(Nome = Data['Orientador'])
+    Cliente.Observacoes = Data['Observacoes']
+    Cliente.Presenca = Data['Presenca']
+    Cliente.Status = Data['Status']
+    Cliente.save()
+    return HttpResponse(200)
+    ...
+
 def add_cliente(request: WSGIRequest):
     Data: dict = loads(request.body.decode())
     Clientes(
