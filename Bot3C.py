@@ -91,18 +91,18 @@ class Bot():
     
     
     def total_calls(self):
-        with sqlite3.connect('calls.db') as conn:
+        try:
+            horarios = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00']
             Chamadas = self.ChamadasTotais()
             Atendidas = self.ChamadasAtendidas()
-            horarios = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00']
-            
-            Cursor = conn.cursor() 
-            Cursor.execute("CREATE TABLE IF NOT EXISTS total_calls(orientador TEXT, chamadas INTEGER, atendidas INTEGER, data TEXT, horario TEXT)")
-            if Cursor.execute(f"SELECT * FROM total_calls WHERE orientador = ? AND data = ?", (self.Orientador, strftime('%d/%m/%Y'))).fetchall().__len__() == 0 and strftime('%H:%M') in horarios:
-                Cursor.execute("INSERT INTO total_calls(orientador, chamadas, atendidas, data, horario) VALUES(?, ?, ?, ?, ?)", (self.Orientador, Chamadas, Atendidas, strftime('%d/%m/%Y'), strftime('%H:%M')))
-            else:
-                Cursor.execute("UPDATE total_calls SET chamadas = ?, atendidas = ? WHERE orientador = ? AND data = ? AND horario = ?", (Chamadas, Atendidas, self.Orientador, strftime('%d/%m/%Y'), strftime('%H:%M')))
-
+            with sqlite3.connect('calls.db') as conn:
+                Cursor = conn.cursor() 
+                Cursor.execute("CREATE TABLE IF NOT EXISTS total_calls(orientador TEXT, chamadas INTEGER, atendidas INTEGER, data TEXT, horario TEXT)")
+                if Cursor.execute(f"SELECT * FROM total_calls WHERE orientador = ? AND data = ? AND horario = ?", (self.Orientador, strftime('%d/%m/%Y'), strftime('%H:%M'))).fetchall().__len__() == 0 and strftime('%H:%M') in horarios:
+                    Cursor.execute("INSERT INTO total_calls(orientador, chamadas, atendidas, data, horario) VALUES(?, ?, ?, ?, ?)", (self.Orientador, Chamadas, Atendidas, strftime('%d/%m/%Y'), strftime('%H:%M')))
+                elif strftime('%H:%M') in horarios:
+                    Cursor.execute("UPDATE total_calls SET chamadas = ?, atendidas = ? WHERE orientador = ? AND data = ? AND horario = ?", (Chamadas, Atendidas, self.Orientador, strftime('%d/%m/%Y'), strftime('%H:%M')))
+        except: pass
 
 
 from threading import Thread

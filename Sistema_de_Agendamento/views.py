@@ -17,7 +17,6 @@ def update_calls(request: WSGIRequest):
         Calls = Cursor.execute("SELECT * FROM total_calls WHERE data = ?", (strftime('%d/%m/%Y'),)).fetchall()
         Chamadas = {Orientador[1]: [] for Orientador in Calls}
         for Call in Calls:
-            print(Call)
             if Call[1] in Chamadas:
                 Chamadas[Call[1]].append({'Chamadas': Call[2], 'Atendidas': Call[3], 'Horario' : Call[5]})
 
