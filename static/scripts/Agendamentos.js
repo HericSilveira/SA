@@ -71,6 +71,10 @@ async function total_calls() {
             ]
             },
             options: {
+                responsive: true,
+                mantainAspectRatio: false,
+                width: 400,
+                height: 300,
                 plugins: {
                 title: {
                     display: true,

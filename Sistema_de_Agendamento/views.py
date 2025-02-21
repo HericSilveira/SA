@@ -12,15 +12,24 @@ import sqlite3
 #Funções
 
 def update_calls(request: WSGIRequest):
-    with sqlite3.connect('calls.db') as conn:
-        Cursor = conn.cursor()
-        Calls = Cursor.execute("SELECT * FROM total_calls WHERE data = ?", (strftime('%d/%m/%Y'),)).fetchall()
-        Chamadas = {Orientador[1]: [] for Orientador in Calls}
-        for Call in Calls:
-            if Call[1] in Chamadas:
-                Chamadas[Call[1]].append({'Chamadas': Call[2], 'Atendidas': Call[3], 'Horario' : Call[5]})
+    if request.method == "GET": #Retorna ligações da data atual
+        with sqlite3.connect('calls.db') as conn:
+            Cursor = conn.cursor()
+            Calls = Cursor.execute("SELECT * FROM total_calls WHERE data = ?", (strftime('%d/%m/%Y'),)).fetchall()
+            Chamadas = {Orientador[1]: [] for Orientador in Calls}
+            for Call in Calls:
+                if Call[1] in Chamadas:
+                    Chamadas[Call[1]].append({'Chamadas': Call[2], 'Atendidas': Call[3], 'Horario' : Call[5]})
+    else: #Retorna as ligações de uma data especifica
+        with sqlite3.connect('calls.db') as conn:
+            Cursor = conn.cursor()
+            Calls = Cursor.execute("SELECT * FROM total_calls WHERE data = ?", (loads(request.body.decode())["Data"],)).fetchall()
+            Chamadas = {Orientador[1]: [] for Orientador in Calls}
+            for Call in Calls:
+                if Call[1] in Chamadas:
+                    Chamadas[Call[1]].append({'Chamadas': Call[2], 'Atendidas': Call[3], 'Horario' : Call[5]})
 
-        return JsonResponse(Chamadas)
+    return JsonResponse(Chamadas)
 
 def Logout(request: WSGIRequest):
     if "ID" in request.session.keys():
