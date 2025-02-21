@@ -54,6 +54,7 @@ body{
     background-color: #202020;
     z-index: 1;
     border: 1px solid #ffffff;
+    transition: 500ms linear;
 
     img{
         height: 50px;
@@ -61,18 +62,24 @@ body{
         right: 2.5%;
         top: 0.5%;
         cursor: pointer;
+
+        &:hover{
+            filter: brightness(75%);
+        }
     }
 
     ul{
         display: flex;
         align-items: center;
         justify-content: space-evenly;
+        min-width: none;
         width: 100%;
-        height: 25%;
+        height: 50%;
         border: 1px solid #ffffff;
 
         li{
             height: 100%;
+            width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;

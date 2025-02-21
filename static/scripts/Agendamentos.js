@@ -16,6 +16,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
 
 async function total_calls() {
+    let Dashboard = document.querySelector('#Dashboard')
+
+    let DashboardButton = document.querySelector('#Navbar > li > a')
+
+    DashboardButton.addEventListener('click', () => {
+        Dashboard.style.visibility = 'visible'
+        Dashboard.style.opacity = 1
+    })
+
+    Dashboard.querySelector('img').addEventListener('click', () => {
+        Dashboard.style.visibility = 'hidden'
+        Dashboard.style.opacity = 0.0
+    })
+
     let Dados = await calls_update()
     let Container = document.querySelector('#Dashboard > ul')
 
@@ -29,24 +43,29 @@ async function total_calls() {
 
         let Infos = () => {
             let Horarios = [];
-            let Chamadas = []
+            let Chamadas = [];
+            let Atendidas = [];
             for (let Index = 0; Index < Dados[KEY].length; Index++) {
                 Horarios.push(Dados[KEY][Index]["Horario"])
-            };
-            for (let Index = 0; Index < Dados[KEY].length; Index++) {
                 Chamadas.push(Dados[KEY][Index]["Chamadas"])
+                Atendidas.push(Dados[KEY][Index]["Atendidas"])
             };
-            return [Horarios, Chamadas];
-        }
 
+            return [Horarios, Chamadas, Atendidas];
+        }
         const Configuration = {
             type: 'line',
             data: {
                 labels: [...Infos()[0].reverse()],
                 datasets: [{
-                    label: 'Ligações',
+                    label: 'Ligações Chamadas',
                     data: [...Infos()[1].reverse()]
-                }]
+                },
+                {
+                    label: 'Ligações Atendidas',
+                    data: [...Infos()[2].reverse()]
+                }
+            ]
             },
             options: {
                 plugins: {
@@ -57,10 +76,9 @@ async function total_calls() {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: Infos()[1].at(0) * 2,
-                        stepSize: 25,
+                        max: Infos()[1].at(0) * 2 > 0 ? Infos()[1].at(0) * 2 : 20
                     }
-            }
+                }
             }
             
 
