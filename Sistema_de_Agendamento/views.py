@@ -14,7 +14,7 @@ import sqlite3
 def update_calls(request: WSGIRequest):
     with sqlite3.connect('calls.db') as conn:
         Cursor = conn.cursor()
-        Calls = Cursor.execute("SELECT * FROM total_calls").fetchall() # WHERE data = ?", (strftime('%d/%m/%Y'), )
+        Calls = Cursor.execute("SELECT * FROM total_calls WHERE data = ?", (strftime('%d/%m/%Y'),)).fetchall()
         Chamadas = {Orientador[1]: [] for Orientador in Calls}
         for Call in Calls:
             print(Call)
