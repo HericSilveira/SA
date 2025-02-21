@@ -10,6 +10,10 @@
     <title>SA - Instituto Mix</title>
 </head>
 <body data-userid = "{{ Usuario.ID }}">
+    <aside id="Dashboard">
+        <img src="{% static 'Fechar.png' %}" alt="Fechar">
+        <ul></ul>
+    </aside>
     <section id="RegistrarContainer">
         <header><img src="{% static 'Fechar.png' %}" alt="" height="80%"></header>
         <main id="Registrar">
@@ -70,9 +74,10 @@
         </ul>
     </footer>
     
-    <script src="{% static 'scripts/Agendamentos.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+    <script src="{% static 'scripts/Agendamentos.js' %}"></script>
 </body>
 </html>

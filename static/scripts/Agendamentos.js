@@ -1,17 +1,81 @@
-const TOKEN = document.getElementById('TOKEN').content
-let WindowEventsAdded = false
+const TOKEN = document.getElementById('TOKEN').content;
+let WindowEventsAdded = false;
 
-document.addEventListener('DOMContentLoaded', () => {
+
+document.addEventListener('DOMContentLoaded', async () => {
     flatpickr('#Data', {'dateFormat': 'd/m/Y','mode': 'range','locale': 'pt'});
     flatpickr('#DataAgendamento', {'dateFormat': 'd/m/Y H:i','locale': 'pt', 'enableTime': true, 'time_24hr': true});
     
-
+    
+    total_calls();
     Logout();
     LoadAgendamentos();
     InformationPanel();
     Remove();
     adicionar_agendamento();
 })
+
+async function total_calls() {
+    let Dados = await calls_update()
+    let Container = document.querySelector('#Dashboard > ul')
+
+    for (const KEY in Dados){
+        let GraficoContainer = document.createElement('li')
+        let Grafico = document.createElement('canvas')
+
+        GraficoContainer.appendChild(Grafico)
+
+        Container.appendChild(GraficoContainer)
+
+        let Infos = () => {
+            let Horarios = [];
+            let Chamadas = []
+            for (let Index = 0; Index < Dados[KEY].length; Index++) {
+                Horarios.push(Dados[KEY][Index]["Horario"])
+            };
+            for (let Index = 0; Index < Dados[KEY].length; Index++) {
+                Chamadas.push(Dados[KEY][Index]["Chamadas"])
+            };
+            return [Horarios, Chamadas];
+        }
+
+        const Configuration = {
+            type: 'line',
+            data: {
+                labels: [...Infos()[0].reverse()],
+                datasets: [{
+                    label: 'Ligações',
+                    data: [...Infos()[1].reverse()]
+                }]
+            },
+            options: {
+                plugins: {
+                title: {
+                    display: true,
+                    text: KEY
+                }},
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: Infos()[1].at(0) * 2,
+                        stepSize: 25,
+                    }
+            }
+            }
+            
+
+        }
+
+        new Chart(Grafico, Configuration)
+
+    }
+}
+
+async function calls_update() {
+    response = await fetch('update_calls')
+    dados = await response.json()
+    return dados
+}
 
 function FormatarData(Data) {
     let Horario = Data.split('T')[1]
@@ -126,16 +190,23 @@ async function adicionar_agendamento() {
 }
 
 async function GetOrientador(OrientadorID){
-    let Response = await fetch('GetOrientadores', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': TOKEN
-        },
-        body: JSON.stringify({'ID': OrientadorID})
-    })
+    let response;
+    if (OrientadorID){
+        response = await fetch('GetOrientadores', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': TOKEN
+            },
+            body: JSON.stringify({'ID': OrientadorID})
+        })
+    }
+    else{
+        response = await fetch('GetOrientadores')
+    }
+    
 
-    let Data = await Response.json()
+    let Data = await response.json();
     
     return Data
 }

@@ -3,11 +3,25 @@ from django.forms.models import model_to_dict
 from django.http import JsonResponse, HttpResponse
 from django.core.handlers.wsgi import WSGIRequest
 from .models import Orientadores, Clientes
-from json import  loads
+from json import loads
 from datetime import datetime, timedelta
+from time import strftime
 from argon2 import PasswordHasher
+import sqlite3
 
 #Funções
+
+def update_calls(request: WSGIRequest):
+    with sqlite3.connect('calls.db') as conn:
+        Cursor = conn.cursor()
+        Calls = Cursor.execute("SELECT * FROM total_calls").fetchall() # WHERE data = ?", (strftime('%d/%m/%Y'), )
+        Chamadas = {Orientador[1]: [] for Orientador in Calls}
+        for Call in Calls:
+            print(Call)
+            if Call[1] in Chamadas:
+                Chamadas[Call[1]].append({'Chamadas': Call[2], 'Atendidas': Call[3], 'Horario' : Call[5]})
+
+        return JsonResponse(Chamadas)
 
 def Logout(request: WSGIRequest):
     if "ID" in request.session.keys():
@@ -28,7 +42,7 @@ def edit_cliente(request: WSGIRequest):
     Cliente.Status = Data['Status']
     Cliente.save()
     return HttpResponse(200)
-    ...
+    
 
 def add_cliente(request: WSGIRequest):
     Data: dict = loads(request.body.decode())
@@ -42,7 +56,7 @@ def add_cliente(request: WSGIRequest):
         Observacoes = Data['Observacoes']
     ).save()
     return HttpResponse(200)
-    ...
+    
 
 def DeleteCostumer(request: WSGIRequest):
     Data: dict = loads(request.body.decode())
@@ -54,10 +68,13 @@ def DeleteCostumer(request: WSGIRequest):
 
 
 def GetOrientadores(request: WSGIRequest):
-    Data: dict = loads(request.body.decode())
-    if 'ID' in Data.keys():
+    if request.method == "POST":
+        Data: dict = loads(request.body.decode())    
         return JsonResponse(model_to_dict(Orientadores.objects.get(ID = int(Data['ID']))))
-    return JsonResponse({model_to_dict(Orientador)['ID']: model_to_dict(Orientador) for Orientador in Orientadores.objects.all()})
+    _ = {model_to_dict(Orientador)['ID']: model_to_dict(Orientador) for Orientador in Orientadores.objects.all()}
+    for i in _:
+        del _[i]['Senha']
+    return JsonResponse(_)
 
 def GetAgendamentos(request: WSGIRequest):
     Dados: dict[str, str] = loads(request.body.decode())
