@@ -33,7 +33,6 @@ async function total_calls() {
     let Dados = await calls_update()
     let Container = document.querySelector('#Dashboard > ul')
 
-    console.log(Dados)
 
     for (const KEY in Dados){
         let GraficoContainer = document.createElement('li')
@@ -58,15 +57,16 @@ async function total_calls() {
         }
         const Configuration = {
             type: 'line',
+            showTooltips: true,
             data: {
                 labels: [...Infos()[0]],
                 datasets: [{
                     label: 'Ligações Chamadas',
-                    data: [...Infos()[1].reverse()]
+                    data: [...Infos()[1]]
                 },
                 {
                     label: 'Ligações Atendidas',
-                    data: [...Infos()[2].reverse()]
+                    data: [...Infos()[2]]
                 }
             ]
             },
@@ -83,9 +83,9 @@ async function total_calls() {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: Infos()[1].at(0) * 2 > 0 ? Infos()[1].at(0) * 2 : 20,
+                        max: Infos()[1].at(-1) * 2 > 0 ? Infos()[1].at(-1) * 2 : 20,
                         ticks: {
-                            stepSize: Infos()[1].at(0) * 2 > 0 ? Infos()[1].at(0) * 2 * 0.1 : 20 * 0.1 
+                            stepSize: Infos()[1].at(-1) * 2 > 0 ? Math.floor(Infos()[1].at(-1) * 2 * 0.1) : 20 * 0.1
                         }
                     }
                 }
@@ -93,9 +93,9 @@ async function total_calls() {
             
 
         }
-
-        new Chart(Grafico, Configuration)
-
+        let X = new Chart(Grafico, Configuration)
+        X.update()
+        console.log(X)
     }
 }
 
