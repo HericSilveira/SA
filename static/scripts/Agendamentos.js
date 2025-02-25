@@ -1,7 +1,6 @@
 const TOKEN = document.getElementById('TOKEN').content;
 let WindowEventsAdded = false;
 
-
 document.addEventListener('DOMContentLoaded', async () => {
     flatpickr('#Data', {'dateFormat': 'd/m/Y','mode': 'range','locale': 'pt'});
     flatpickr('#DataAgendamento', {'dateFormat': 'd/m/Y H:i','locale': 'pt', 'enableTime': true, 'time_24hr': true});
@@ -74,8 +73,6 @@ async function total_calls() {
             options: {
                 responsive: true,
                 mantainAspectRatio: false,
-                width: 400,
-                height: 300,
                 plugins: {
                 title: {
                     display: true,

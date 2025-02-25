@@ -103,10 +103,11 @@ class Bot():
             if strftime('%H:%M') in horarios:
                 Chamadas = self.ChamadasTotais()
                 Atendidas = self.ChamadasAtendidas()
-                chamadas(orientador = orientadores.objects.get(nome = self.Orientador), chamadas = Chamadas, atendidas = Atendidas).save()
+                print(Chamadas, Atendidas)
+                chamadas(orientador = orientadores.objects.get(Nome = self.Orientador), chamadas = Chamadas, horario = strftime('%H:%M'), atendidas = Atendidas).save()
                 sleep(60)
-        except: 
-            pass
+        except Exception as Error: 
+            print(Error)
 
 
 from threading import Thread
