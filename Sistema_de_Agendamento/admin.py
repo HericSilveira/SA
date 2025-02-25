@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import Orientadores, Clientes
+from .models import orientadores, clientes
 
-@admin.register(Orientadores)
+@admin.register(orientadores)
 class OrientadoresAdmin(admin.ModelAdmin):
     list_display = ['ID', 'Nome', 'Senha', 'Cor']
 
-@admin.register(Clientes)
+@admin.register(clientes)
 class ClientesAdmin(admin.ModelAdmin):
-    list_display = ['ID', 'Nome', 'Orientador', 'Acompanhante', 'Curso', 'Celular', 'Data', 'Status', 'Observacoes']
+    list_display = ['ID', 'nome', 'orientador', 'acompanhante', 'curso', 'celular', 'data_agendada', 'data_registrado', 'status', 'observacoes']

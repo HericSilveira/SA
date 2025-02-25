@@ -33,7 +33,6 @@ async function total_calls() {
     let Dados = await calls_update()
     let Container = document.querySelector('#Dashboard > ul')
 
-
     for (const KEY in Dados){
         let GraficoContainer = document.createElement('li')
         let Grafico = document.createElement('canvas')
@@ -42,19 +41,21 @@ async function total_calls() {
 
         Container.appendChild(GraficoContainer)
 
-
-        let Infos = () => {
-            let Horarios = [];
-            let Chamadas = [];
-            let Atendidas = [];
-            for (let Index = 0; Index < Dados[KEY].length; Index++) {
-                Horarios.push(Dados[KEY][Index]["Horario"])
-                Chamadas.push(Dados[KEY][Index]["Chamadas"])
-                Atendidas.push(Dados[KEY][Index]["Atendidas"])
-            };
-
-            return [Horarios, Chamadas, Atendidas];
+        function Infos() {
+            let Horarios = []
+            let Chamadas = []
+            let Atendidas = []
+            for (let index = 0; index < Dados[KEY].length; index++) {
+                for (const key in Dados[KEY][index]) {
+                    Horarios.push(key)
+                    Chamadas.push(Dados[KEY][index][key]["chamadas"])
+                    Atendidas.push(Dados[KEY][index][key]["Atendidas"])
+                }
+            }
+            return [Horarios, Chamadas, Atendidas]
         }
+
+
         const Configuration = {
             type: 'line',
             showTooltips: true,
@@ -93,9 +94,7 @@ async function total_calls() {
             
 
         }
-        let X = new Chart(Grafico, Configuration)
-        X.update()
-        console.log(X)
+        new Chart(Grafico, Configuration)
     }
 }
 
@@ -335,19 +334,20 @@ async function AgendamentosGenerator(Days) {
         Container.innerHTML = ''
         for (let i = 0; i < Object.keys(Agendamentos.Agendamentos).length; i++) {
             const Data = Agendamentos.Agendamentos[i];
+            console.log(Data)
             let DadosContainer = document.createElement('ul');
             let botao_editar = document.createElement('i')
             botao_editar.classList.add('editbtn')
             DadosContainer.classList.add('Agendamento')
             let Nome = document.createElement('li');
-            Nome.innerHTML = `<span>Aluno:</span> ${Data['Nome']}`
+            Nome.innerHTML = `<span>Aluno:</span> ${Data['nome']}`
             let Curso = document.createElement('li');
-            Curso.innerHTML = `<span>Curso:</span> ${Data['Curso']}`
+            Curso.innerHTML = `<span>Curso:</span> ${Data['curso']}`
             let OrientadorContainer = document.createElement('li')
-            let Orientador = await GetOrientador(Data['Orientador'], TOKEN)
+            let Orientador = await GetOrientador(Data['orientador'], TOKEN)
             OrientadorContainer.innerHTML = `<span>Orientador: </span> ${Orientador.Nome}`
             let Horario = document.createElement('li');
-            let _ = new Date(Data['Data'])
+            let _ = new Date(Data['data_agendada'])
             Horario.innerHTML = `<span>Horario:</span> ${_.getHours()}:${_.getMinutes() >= 10 ? _.getMinutes() : `0${_.getMinutes()}`}`
             DadosContainer.appendChild(Nome)
             DadosContainer.appendChild(Curso)
@@ -357,7 +357,7 @@ async function AgendamentosGenerator(Days) {
             DadosContainer.setAttribute('data-orientador', Orientador['ID'])
             botao_editar.addEventListener('click', (event) =>{
                 event.stopPropagation()
-                editar_agendamento(Data)
+                InformationEdit(false, Object.values(Data).slice(1), Data['ID']) 
             })
             let Color = document.createElement('i')
             Color.classList.add('ball')
@@ -463,7 +463,7 @@ function InformationEdit(Hidden, Dados, ID){
         ContainerDosDados = document.querySelectorAll('#Dados input, #Dados textarea')
         NewData["ID"] = ID
         ContainerDosDados.forEach((Elemento, Index) => {
-            let Keys = ['Nome', 'Orientador', 'Acompanhante', 'Curso', 'Celular', 'Data', 'Status', 'Presenca', 'Observacoes']
+            let Keys = ['nome', 'orientador', 'acompanhante', 'curso', 'celular', 'data_agendada', 'status', 'presenca', 'observacoes']
             NewData[Keys[Index]] = Elemento.value
         })
 
@@ -525,8 +525,4 @@ async function Remove() {
 
         Confirmation.style.display = 'none'
     })
-}
-
-async function editar_agendamento(Dados) {
-    InformationEdit(false, Object.values(Dados).slice(1), Dados['ID']) 
 }
