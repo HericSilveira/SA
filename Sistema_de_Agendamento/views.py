@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.forms.models import model_to_dict
 from django.http import JsonResponse, HttpResponse
 from django.core.handlers.wsgi import WSGIRequest
-from .models import orientadores, clientes, chamadas
+from .models import orientadores, clientes, chamadas, agendamentos
 from json import loads
 from datetime import datetime, timedelta
 from time import strftime, strptime
@@ -51,6 +51,11 @@ def edit_cliente(request: WSGIRequest):
 
 def add_cliente(request: WSGIRequest):
     Data: dict = loads(request.body.decode())
+    print(agendamentos.objects.all())
+    if len(agendamento := agendamentos.objects.get(data_agendada = strftime("%Y-%m-%d"))) > 0:
+        agendamento.agendamentos += 1
+    else:
+        agendamentos(agendamentos = 1, data = strftime("%Y-%m-%d")).save()
     clientes(
         nome = Data['Nome'],
         orientador = orientadores.objects.get(ID = Data['Orientador']),

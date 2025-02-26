@@ -35,3 +35,8 @@ class chamadas(models.Model):
     atendidas = models.IntegerField()
     data = models.DateField(auto_now=True)
     horario = models.TimeField()
+    
+class agendamentos(models.Model):
+    
+    agendamentos = models.IntegerField(default = 0)
+    data = models.DateField()
